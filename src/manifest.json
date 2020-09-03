@@ -1,0 +1,9 @@
+{
+  "manifest_version": 2,
+  "name": "amp-contextnode-devtools",
+  "version": "0.0.1",
+  "description": "A DevTools extension to inspect AMP context nodes",
+  "permissions": [],
+  "devtools_page": "bootstrap.html",
+  "key": "$key$"
+}

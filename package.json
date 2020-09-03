@@ -1,0 +1,28 @@
+{
+  "name": "@dvoytenko/amp-contextnode-devtools",
+  "version": "0.0.1",
+  "description": "A DevTools extension to inspect AMP context nodes",
+  "main": "dist/bootstrap.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dvoytenko/amp-contextnode-devtools.git"
+  },
+  "homepage": "https://github.com/dvoytenko/amp-contextnode-devtools",
+  "author": "Dima Voytenko",
+  "license": "MIT",
+  "files": ["dist"],
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.cjs",
+    "clean": "rm -r dist",
+    "dev": "echo 'Not implemeneted' && exit 0",
+    "prepublishOnly": "yarn build",
+    "prettier": "prettier --write src/*"
+  },
+  "publishConfig": {
+    "tag": "latest"
+  }
+}
