@@ -47,6 +47,22 @@ function getPanelContents() {
     return res;
   }
 
+  function getInputValues(cn) {
+    if (!cn.values || !cn.values.inputsByKey_) {
+      return [];
+    }
+    return mapMap(cn.values.inputsByKey_, (v) =>
+      v.values.length == 1 ? v.values[0] : v.values
+    );
+  }
+
+  function getUsedValues(cn) {
+    if (!cn.values || !cn.values.usedByKey_) {
+      return [];
+    }
+    return mapMap(cn.values.usedByKey_, (v) => v.value);
+  }
+
   const node = $0.nodeType == 10 ? $0.ownerDocument : $0;
   const cn = node.__AMP_NODE;
 
@@ -57,7 +73,7 @@ function getPanelContents() {
     res["_"] = "no context node";
     const doc = node.ownerDocument || node;
     if (doc.__AMP_NODE && doc.__AMP_NODE.constructor.closest) {
-      res["closest"] = getNode(doc.__AMP_NODE.constructor.closest(node));
+      res.closest = getNode(doc.__AMP_NODE.constructor.closest(node));
     }
     return res;
   }
@@ -66,27 +82,22 @@ function getPanelContents() {
   res.parent = getNode(cn.parent);
   res.parentId = debugId(res.parent);
   res.root = getNode(cn.root);
-  res.children = cnArrayToNodes(cn.children);
+  res.children = cnArrayToNodes(cn.children).filter((n) => n !== node);
 
   res.group = (cn.parent && cn.parent.name) || null;
   res.groups =
     (cn.pseudos_ &&
-      mapMap(cn.pseudos_, (v) => cnArrayToNodes(v.cn.children))) ||
+      mapMap(cn.pseudos_, (v) => {
+        const res = Object.create(null);
+        res.children = cnArrayToNodes(v.cn.children);
+        res.inputValues = getInputValues(v.cn);
+        res.usedValues = getUsedValues(v.cn);
+        return res;
+      })) ||
     [];
 
-  res.inputValues =
-    (cn.values &&
-      cn.values.inputsByKey_ &&
-      mapMap(cn.values.inputsByKey_, (v) =>
-        v.values.length == 1 ? v.values[0] : v.values
-      )) ||
-    [];
-
-  res.usedValues =
-    (cn.values &&
-      cn.values.usedByKey_ &&
-      mapMap(cn.values.usedByKey_, (v) => v.value)) ||
-    [];
+  res.inputValues = getInputValues(cn);
+  res.usedValues = getUsedValues(cn);
 
   res.components = Array.from(
     (cn.components_ && cn.components_.values()) || []
